@@ -3,7 +3,7 @@
 client_id = "39420ea20c6881021e2d07115690bc32"
 name = "best-sellers-app"
 handle = "best-sellers-app-2"
-application_url = "https://photographer-ka-undergraduate-stuart.trycloudflare.com"
+application_url = "https://calculated-jean-obligation-goods.trycloudflare.com"
 embedded = true
 
 [build]
@@ -23,13 +23,13 @@ api_version = "2025-04"
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "write_products"
+scopes = "write_products,read_products"
 
 [auth]
 redirect_urls = [
-  "https://photographer-ka-undergraduate-stuart.trycloudflare.com/auth/callback",
-  "https://photographer-ka-undergraduate-stuart.trycloudflare.com/auth/shopify/callback",
-  "https://photographer-ka-undergraduate-stuart.trycloudflare.com/api/auth/callback"
+  "https://calculated-jean-obligation-goods.trycloudflare.com/auth/callback",
+  "https://calculated-jean-obligation-goods.trycloudflare.com/auth/shopify/callback",
+  "https://calculated-jean-obligation-goods.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]

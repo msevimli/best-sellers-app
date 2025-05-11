@@ -33,6 +33,7 @@ export async function action({ request }) {
   // updates persistent data
   let settings = await request.formData();
   settings = Object.fromEntries(settings);
+  const sortType = settings.isReverse == "true" ? true : false;
 
   //Update database
   await db.settings.upsert({
@@ -43,13 +44,13 @@ export async function action({ request }) {
       id: '1',
       title: settings.title,
       productCount: parseInt(settings.productCount),
-      isReverse: Boolean(settings.isReverse)
+      isReverse: sortType
     },
     create: {
       id: '1',
       title: settings.title,
       productCount: parseInt(settings.productCount),
-      isReverse: Boolean(settings.isReverse)
+      isReverse: sortType
     }
   });
   return json(settings);
@@ -60,6 +61,14 @@ export default function SettingsPage() {
   const settings = useLoaderData();
   const [formState, setFormState] = useState(settings);
 
+  const [selected, setSelected] = useState(['hidden']);
+  const handleChange = useCallback((value) => {
+    setSelected(value);
+    setFormState((prev) => ({
+      ...prev,
+      isReverse: value[0]
+    }));
+  }, []);
   return (
     <Page>
       <TitleBar title="Settings" />
@@ -72,10 +81,10 @@ export default function SettingsPage() {
           >
             <BlockStack gap="400">
               <Text as="h3" variant="headingMd">
-                InterJambs
+                Best Sellers
               </Text>
               <Text as="p" variant="bodyMd">
-                Interjambs are the rounded protruding bits of your puzzlie piece
+                Some set for Best Sellers App configuration
               </Text>
             </BlockStack>
           </Box>
@@ -97,11 +106,11 @@ export default function SettingsPage() {
                     { label: 'ASC', value: 'false' },
                     { label: 'DESC', value: 'true' },
                   ]}
-                  selected={formState?.isReverse ? ['true'] : ['false']}
-                  onChange={(value) => setFormState({ ...formState, isReverse: value })}
-                 
+                  //selected={formState?.isReverse===true ? ['true'] : ['false']}
+                  selected={selected}
+                  //onChange={(value) => setFormState({...formState,isReverse: value[0]})}
+                  onChange={handleChange}  
                 />
-                {formState?.isReverse}
                 <Button submit={true}>Save</Button>
               </BlockStack>
             </Form>

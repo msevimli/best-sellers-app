@@ -1,13 +1,3 @@
-{% assign avg_rating = block.settings.product.metafields.demo.avg_rating.value | round %}
-<span style="color:{{ block.settings.colour }}">
-  {% render 'stars', rating: avg_rating %}
-</span>
-{% if avg_rating >= 4 %}
-  <br>
-  <img src="{{ "thumbs-up.png" | asset_img_url: '15x' }}" height="15" width="15" loading="lazy">
-  {{ 'ratings.home.recommendationText' | t }}
-{% endif %}
-
 {% schema %}
 {
   "name": "Best Sellers",
@@ -23,20 +13,22 @@
   <h2 id="best-section-title"></h2>
   <div id="best-product-container">
     <p>Loading bestsellers...</p>
+    
   </div>
 </div>
 
 <script>
-  appUrl = "https://photographer-ka-undergraduate-stuart.trycloudflare.com";
+  appUrl = "https://calculated-jean-obligation-goods.trycloudflare.com";
   fetch(appUrl+'/api/bestsellers')
     .then(response => response.json())
     .then(data => {
       const container = document.getElementById('best-product-container');
       const sectionTitle = document.getElementById('best-section-title');
-      sectionTitle.innerHTML = data.data.settings.title;
+      let sets = data.data
+      sectionTitle.innerHTML = sets.settings.title;
       console.log(data);
       if (Array.isArray(data.data.products)) {
-        container.innerHTML = '<ul>' + data.data.products.map(product => `
+        container.innerHTML = '<ul>' + sets.products.map(product => `
           <li>
             <a href="${product.url}" target="_blank">
               ${product.title} - ${product.total_sales} sold
