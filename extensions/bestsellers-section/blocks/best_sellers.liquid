@@ -12,22 +12,47 @@
 <div id="bestsellers-container">
   <h2 id="best-section-title"></h2>
   <div id="best-product-container">
+    <ul class="grid product-grid contains-card contains-card--product contains-card--standard grid--4-col-desktop grid--2-col-tablet-down">
+      <li class="grid__item">
+        <div class="card-wrapper underline-links-hover">
+          <div class="card card--standard card--media">
+            <div class="card__media">
+              <div class="media media--transparent media--hover-effect">
+                <img
+                  src="https://cdn.shopify.com/s/files/1/0949/5402/9381/files/snowboard_purple_hydrogen.png?v=1746823897"
+                  alt="Loading..."
+                >
+              </div>
+            </div>
+            <div class="card__content">
+              <h3>Loading...</h3>
+              <p>Loading...</p>
+            </div>
+          </div>
+          <div class="card__content">
+            <div class="card__information">
+              <h3>Loading...</h3>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
     <p>Loading bestsellers...</p>
-    
   </div>
 </div>
-
 <script>
-  appUrl = "https://calculated-jean-obligation-goods.trycloudflare.com";
-  fetch(appUrl+'/api/bestsellers')
-    .then(response => response.json())
-    .then(data => {
+  appUrl = 'https://consists-robertson-instrumental-beatles.trycloudflare.com';
+  fetch(appUrl + '/api/bestsellers')
+    .then((response) => response.json())
+    .then((data) => {
       const container = document.getElementById('best-product-container');
       const sectionTitle = document.getElementById('best-section-title');
-      let sets = data.data
+
+      let sets = data.data;
       sectionTitle.innerHTML = sets.settings.title;
       console.log(data);
       if (Array.isArray(data.data.products)) {
+        /*
         container.innerHTML = '<ul>' + sets.products.map(product => `
           <li>
             <a href="${product.url}" target="_blank">
@@ -35,14 +60,14 @@
             </a>
           </li>
         `).join('') + '</ul>';
+        */
       } else {
         container.innerHTML = '<p>No data found.</p>';
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       console.error('Error fetching bestsellers:', err);
       document.getElementById('best-product-container').innerHTML = '<p>Error loading data.</p>';
     });
 </script>
-
