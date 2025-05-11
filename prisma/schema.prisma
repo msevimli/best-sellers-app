@@ -33,6 +33,7 @@ model Session {
 
 model Settings {
   id            String    @id
-  name          String
-  description   String?
+  title         String @default("Best Sellers")
+  productCount  Int @default(4)
+  isReverse     Boolean @default(false)
 }

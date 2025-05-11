@@ -27,16 +27,16 @@
 </div>
 
 <script>
-  appUrl = "https://banana-headed-tests-oral.trycloudflare.com";
+  appUrl = "https://photographer-ka-undergraduate-stuart.trycloudflare.com";
   fetch(appUrl+'/api/bestsellers')
     .then(response => response.json())
     .then(data => {
       const container = document.getElementById('best-product-container');
       const sectionTitle = document.getElementById('best-section-title');
-      sectionTitle.innerHTML = data.data.name;
+      sectionTitle.innerHTML = data.data.settings.title;
       console.log(data);
-      if (Array.isArray(data.products)) {
-        container.innerHTML = '<ul>' + data.products.map(product => `
+      if (Array.isArray(data.data.products)) {
+        container.innerHTML = '<ul>' + data.data.products.map(product => `
           <li>
             <a href="${product.url}" target="_blank">
               ${product.title} - ${product.total_sales} sold
