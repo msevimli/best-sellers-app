@@ -1,12 +1,3 @@
-{{ 'ratings.stars.label' | t }}:
-
-{%- for i in (1..rating) -%}
-  ★
-{%- endfor -%}
-{%- assign blank_stars = 5 | minus: rating -%}
-{%- for i in (1..blank_stars) -%}
-  ☆
-{%- endfor -%}
 
 <li class="grid__item scroll-trigger animate--slide-in" data-cascade="" style="--animation-order: 4;">
   <div class="card-wrapper product-card-wrapper underline-links-hover">

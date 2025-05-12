@@ -3,8 +3,7 @@
   "name": "Best Sellers",
   "target": "section",
   "settings": [
-    { "type": "product", "id": "product", "label": "product", "autofill": true },
-    { "type": "color", "id": "colour", "label": "Star Colour", "default": "#ff0000" }
+    { "type": "product", "id": "product", "label": "product", "autofill": true }
   ]
 }
 {% endschema %}
@@ -12,38 +11,14 @@
 <div id="bestsellers-container">
   <h2 id="best-section-title"></h2>
   <div id="best-product-container">
-    <ul class="grid product-grid contains-card contains-card--product contains-card--standard grid--4-col-desktop grid--2-col-tablet-down">
-      <li class="grid__item">
-        <div class="card-wrapper underline-links-hover">
-          <div class="card card--standard card--media">
-            <div class="card__media">
-              <div class="media media--transparent media--hover-effect">
-                <img
-                  src="https://cdn.shopify.com/s/files/1/0949/5402/9381/files/snowboard_purple_hydrogen.png?v=1746823897"
-                  alt="Loading..."
-                >
-              </div>
-            </div>
-            <div class="card__content">
-              <h3>Loading...</h3>
-              <p>Loading...</p>
-            </div>
-          </div>
-          <div class="card__content">
-            <div class="card__information">
-              <h3>Loading...</h3>
-            </div>
-          </div>
-        </div>
-      </li>
-    </ul>
-    <p>Loading bestsellers...</p>
+    <p id="best-loading-status">Loading bestsellers...</p>
+    <ul
+      class="grid product-grid contains-card contains-card--product contains-card--standard grid--4-col-desktop grid--2-col-tablet-down"
+    ></ul>
   </div>
 </div>
 
 <script src="{{ 'handlebars.min.js' | asset_url }}" defer="defer"></script>
-
-<div id="test-container"></div>
 
 <script id="product-template" type="text/x-handlebars-template">
   {% raw %}
@@ -71,6 +46,10 @@
               </a>
             </h3>
           </div>
+          {{#if isSaleBadgeVisible}}
+            <div class="card__badge bottom left"><span  class="badge badge--bottom-left color-scheme-4">Sale</span></div>
+          {{/if}}
+
           <div class="card__badge bottom left"></div>
         </div>
       </div>
@@ -83,7 +62,7 @@
           </h3>
           <div class="card-information">
             <span class="caption-large light"></span>
-            <div class="price ">
+            <div class="price price--on-sale">
               <div class="price__container">
                 <div class="price__regular">
                   <span class="visually-hidden visually-hidden--inline">Regular price</span>
@@ -91,7 +70,11 @@
                 </div>
                 <div class="price__sale">
                   <span class="visually-hidden visually-hidden--inline">Regular price</span>
-                  <span> <s class="price-item price-item--regular">  {{ compareAtPrice }} {{ currencyCode }} </s> </span>
+
+                  {{#if isCompareAtPriceVisible}}
+                    <span> <s class="price-item price-item--regular">  {{ compareAtPrice }} {{ currencyCode }} </s> </span>
+                  {{/if}}
+
                   <span class="visually-hidden visually-hidden--inline">Sale price</span>
                   <span class="price-item price-item--sale price-item--last"> {{ amount }} {{ currencyCode }} </span>
                 </div>
@@ -116,41 +99,43 @@
   {% endraw %}
 </script>
 
-
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    appUrl = 'https://emotional-analog-stock-ol.trycloudflare.com';
+    appUrl = 'https://monsters-recently-athletics-pharmaceutical.trycloudflare.com';
     fetch(appUrl + '/api/bestsellers')
       .then((response) => response.json())
-      .then((data) => {
+      .then((resp) => {
         const container = document.getElementById('best-product-container');
         const sectionTitle = document.getElementById('best-section-title');
         const ul = document.querySelector('#best-product-container ul');
-        let sets = data.data;
+        let sets = resp.data;
         sectionTitle.innerHTML = sets.settings.title;
-        console.log(data);
-        if (Array.isArray(data.data.products)) {
+        //console.log(resp);
+        if (Array.isArray(resp.data.products)) {
+          document.getElementById('best-loading-status').style.display = 'none';
           const templateSource = document.getElementById('product-template').innerHTML;
           const template = Handlebars.compile(templateSource);
 
-          data.data.products.forEach((product) => {
+          resp.data.products.forEach((product) => {
+            const variant = product.variants.edges[0]?.node;
+            const compareAt = variant?.compareAtPrice?.amount;
             const context = {
-              handle:product.handle,
+              handle: product.handle,
               title: product.title,
               image: product.images.edges[0]?.node.url || '',
               amount: product.variants.edges[0]?.node.price.amount || 'N/A',
               currencyCode: product.variants.edges[0]?.node.price.currencyCode || '',
-              compareAtPrice: product.variants.edges[0]?.node.compareAtPrice?.amount || '',
+              compareAtPrice: compareAt || '',
+              isSaleBadgeVisible: !!compareAt, // true if compareAt is not null/undefined/empty
+              isCompareAtPriceVisible: !!compareAt, // true if compareAt is not null/undefined/empty
             };
             ul.innerHTML += template(context);
           });
-
         } else {
           container.innerHTML = '<p>No data found.</p>';
         }
       })
       .catch((err) => {
-        console.log(err);
         console.error('Error fetching bestsellers:', err);
         document.getElementById('best-product-container').innerHTML = '<p>Error loading data.</p>';
       });

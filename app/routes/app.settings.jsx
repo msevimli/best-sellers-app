@@ -1,9 +1,6 @@
 import {
   Box,
   Card,
-  Layout,
-  Link,
-  List,
   Page,
   Text,
   BlockStack,
@@ -60,8 +57,7 @@ export default function SettingsPage() {
   const { smUp } = useBreakpoints();
   const settings = useLoaderData();
   const [formState, setFormState] = useState(settings);
-
-  const [selected, setSelected] = useState(['hidden']);
+  const [selected, setSelected] = useState([formState?.isReverse === true ? 'true' : 'false']);
   const handleChange = useCallback((value) => {
     setSelected(value);
     setFormState((prev) => ({
@@ -106,9 +102,7 @@ export default function SettingsPage() {
                     { label: 'ASC', value: 'false' },
                     { label: 'DESC', value: 'true' },
                   ]}
-                  //selected={formState?.isReverse===true ? ['true'] : ['false']}
                   selected={selected}
-                  //onChange={(value) => setFormState({...formState,isReverse: value[0]})}
                   onChange={handleChange}  
                 />
                 <Button submit={true}>Save</Button>
@@ -119,22 +113,5 @@ export default function SettingsPage() {
         {smUp ? <Divider /> : null}
       </BlockStack>
     </Page>
-  );
-}
-
-function Code({ children }) {
-  return (
-    <Box
-      as="span"
-      padding="025"
-      paddingInlineStart="100"
-      paddingInlineEnd="100"
-      background="bg-surface-active"
-      borderWidth="025"
-      borderColor="border"
-      borderRadius="100"
-    >
-      <code>{children}</code>
-    </Box>
   );
 }

@@ -44,11 +44,11 @@ export async function loader({ request }) {
     const settings = await db.settings.findFirst();
 
     const variables = {
-        limit: settings.productCount, // bunu dışarıdan alabilirsin
-        reverse: settings.isReverse, // bunu dışarıdan alabilirsin};
+        limit: settings.productCount, 
+        reverse: settings.isReverse, 
     };
 
-    // 1. Shopify’dan veri çek
+    // 1. get products from shopify
     const shopifyResponse = await fetch(SHOPIFY_API_URL, {
         method: "POST",
         headers: {
@@ -67,7 +67,7 @@ export async function loader({ request }) {
 
     
 
-    // 3. Cevabı birleştir
+    // join product variants with settings
     const response = json({
         ok: true,
         message: "Success",
