@@ -40,34 +40,119 @@
     <p>Loading bestsellers...</p>
   </div>
 </div>
-<script>
-  appUrl = 'https://consists-robertson-instrumental-beatles.trycloudflare.com';
-  fetch(appUrl + '/api/bestsellers')
-    .then((response) => response.json())
-    .then((data) => {
-      const container = document.getElementById('best-product-container');
-      const sectionTitle = document.getElementById('best-section-title');
 
-      let sets = data.data;
-      sectionTitle.innerHTML = sets.settings.title;
-      console.log(data);
-      if (Array.isArray(data.data.products)) {
-        /*
-        container.innerHTML = '<ul>' + sets.products.map(product => `
-          <li>
-            <a href="${product.url}" target="_blank">
-              ${product.title} - ${product.total_sales} sold
+<script src="{{ 'handlebars.min.js' | asset_url }}" defer="defer"></script>
+
+<div id="test-container"></div>
+
+<script id="product-template" type="text/x-handlebars-template">
+  {% raw %}
+  <li class="grid__item scroll-trigger animate--slide-in" data-cascade="" style="--animation-order: 4;">
+  <div class="card-wrapper product-card-wrapper underline-links-hover">
+    <div class="card card--standard card--media" style="--ratio-percent: 100.0%;">
+      <div class="card__inner color-scheme-2 gradient ratio" style="--ratio-percent: 100.0%;">
+        <div class="card__media">
+          <div class="media media--transparent media--hover-effect">
+            <img
+              src='{{ image }}'
+              sizes="(min-width: 1200px) 267px, (min-width: 990px) calc((100vw - 130px) / 4), (min-width: 750px) calc((100vw - 120px) / 3), calc((100vw - 35px) / 2)"
+              class="motion-reduce"
+              loading="lazy"
+              width="1600"
+              height="1600"
+            >
+          </div>
+        </div>
+        <div class="card__content">
+          <div class="card__information">
+            <h3 class="card__heading">
+              <a href="/products/the-complete-snowboard" class="full-unstyled-link" aria-labelledby="">
+                {{ title }}
+              </a>
+            </h3>
+          </div>
+          <div class="card__badge bottom left"></div>
+        </div>
+      </div>
+      <div class="card__content">
+        <div class="card__information">
+          <h3 class="card__heading h5">
+            <a href="/products/{{ handle }}" class="full-unstyled-link" aria-labelledby="">
+               {{ title }}
             </a>
-          </li>
-        `).join('') + '</ul>';
-        */
-      } else {
-        container.innerHTML = '<p>No data found.</p>';
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      console.error('Error fetching bestsellers:', err);
-      document.getElementById('best-product-container').innerHTML = '<p>Error loading data.</p>';
-    });
+          </h3>
+          <div class="card-information">
+            <span class="caption-large light"></span>
+            <div class="price ">
+              <div class="price__container">
+                <div class="price__regular">
+                  <span class="visually-hidden visually-hidden--inline">Regular price</span>
+                  <span class="price-item price-item--regular"> {{ amount }} {{ currencyCode }} </span>
+                </div>
+                <div class="price__sale">
+                  <span class="visually-hidden visually-hidden--inline">Regular price</span>
+                  <span> <s class="price-item price-item--regular">  {{ compareAtPrice }} {{ currencyCode }} </s> </span>
+                  <span class="visually-hidden visually-hidden--inline">Sale price</span>
+                  <span class="price-item price-item--sale price-item--last"> {{ amount }} {{ currencyCode }} </span>
+                </div>
+                <small class="unit-price caption hidden">
+                  <span class="visually-hidden">Unit price</span>
+                  <span class="price-item price-item--last">
+                    <span></span>
+                    <span aria-hidden="true">/</span>
+                    <span class="visually-hidden">&nbsp;per&nbsp;</span>
+                    <span> </span>
+                  </span>
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card__badge bottom left"></div>
+      </div>
+    </div>
+  </div>
+  </li>
+  {% endraw %}
+</script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    appUrl = 'https://emotional-analog-stock-ol.trycloudflare.com';
+    fetch(appUrl + '/api/bestsellers')
+      .then((response) => response.json())
+      .then((data) => {
+        const container = document.getElementById('best-product-container');
+        const sectionTitle = document.getElementById('best-section-title');
+        const ul = document.querySelector('#best-product-container ul');
+        let sets = data.data;
+        sectionTitle.innerHTML = sets.settings.title;
+        console.log(data);
+        if (Array.isArray(data.data.products)) {
+          const templateSource = document.getElementById('product-template').innerHTML;
+          const template = Handlebars.compile(templateSource);
+
+          data.data.products.forEach((product) => {
+            const context = {
+              handle:product.handle,
+              title: product.title,
+              image: product.images.edges[0]?.node.url || '',
+              amount: product.variants.edges[0]?.node.price.amount || 'N/A',
+              currencyCode: product.variants.edges[0]?.node.price.currencyCode || '',
+              compareAtPrice: product.variants.edges[0]?.node.compareAtPrice?.amount || '',
+            };
+            ul.innerHTML += template(context);
+          });
+
+        } else {
+          container.innerHTML = '<p>No data found.</p>';
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        console.error('Error fetching bestsellers:', err);
+        document.getElementById('best-product-container').innerHTML = '<p>Error loading data.</p>';
+      });
+  });
 </script>

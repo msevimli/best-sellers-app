@@ -21,6 +21,10 @@ export async function loader({ request }) {
                      amount
                      currencyCode
                    }
+                   compareAtPrice {
+                    amount
+                    currencyCode
+                  }  
                 }
               }
             }
