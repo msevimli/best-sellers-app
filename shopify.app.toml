@@ -3,7 +3,7 @@
 client_id = "39420ea20c6881021e2d07115690bc32"
 name = "best-sellers-app"
 handle = "best-sellers-app-2"
-application_url = "https://monsters-recently-athletics-pharmaceutical.trycloudflare.com"
+application_url = "https://incentives-premier-particles-mason.trycloudflare.com"
 embedded = true
 
 [build]
@@ -27,9 +27,9 @@ scopes = "write_products,read_products"
 
 [auth]
 redirect_urls = [
-  "https://monsters-recently-athletics-pharmaceutical.trycloudflare.com/auth/callback",
-  "https://monsters-recently-athletics-pharmaceutical.trycloudflare.com/auth/shopify/callback",
-  "https://monsters-recently-athletics-pharmaceutical.trycloudflare.com/api/auth/callback"
+  "https://incentives-premier-particles-mason.trycloudflare.com/auth/callback",
+  "https://incentives-premier-particles-mason.trycloudflare.com/auth/shopify/callback",
+  "https://incentives-premier-particles-mason.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]
